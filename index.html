@@ -230,6 +230,19 @@ function currentSlot(slots) {
   return slots?.find(s => toMin(s.from) <= now && now < toMin(s.to)) || slots?.[0] || null;
 }
 
+// time_slotsがない場合、moodからowlキーを推定
+function owlFromMood(mood) {
+  if (!mood) return 'default';
+  if (/ぼーっ|何もしない|特に/.test(mood))  return 'blank';
+  if (/だるい|眠い|疲/.test(mood))           return 'sleepy';
+  if (/映画|Netflix|映像/.test(mood))        return 'magnify';
+  if (/ハマ|深く|熱中/.test(mood))           return 'idea';
+  if (/エンタメ|音楽|カルチャー/.test(mood)) return 'active';
+  if (/買い物/.test(mood))                   return 'tail';
+  if (/観察/.test(mood))                     return 'neutral';
+  return 'default';
+}
+
 async function loadState() {
   const res = await fetch(STATE_URL + '?t=' + Date.now());
   return res.json();
@@ -282,10 +295,11 @@ async function update() {
 
     // 今の状態
     const slot = currentSlot(state.time_slots);
+    const owlKey = slot?.owl || owlFromMood(state.mood);
     document.getElementById('nowState').textContent = slot?.state || state.mood || '—';
     document.getElementById('nowTime').textContent = slot ? `${slot.from}〜${slot.to}` : '';
     document.getElementById('morningPost').textContent = state.morning_post || '—';
-    if (slot?.owl) renderOwl(slot.owl);
+    renderOwl(owlKey);
 
     // スロット
     renderSlots(state.time_slots, slot);
