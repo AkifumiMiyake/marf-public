@@ -178,7 +178,7 @@ body {
     <div class="owl-placeholder" id="owlWrap">🦉</div>
     <div class="now-state" id="nowState">読み込み中...</div>
     <div class="now-time" id="nowTime"></div>
-    <div class="morning-label">今日の一言</div>
+    <div class="morning-label">今の一言</div>
     <div class="morning-post" id="morningPost">—</div>
   </div>
 
@@ -298,7 +298,7 @@ async function update() {
     const owlKey = slot?.owl || owlFromMood(state.mood);
     document.getElementById('nowState').textContent = slot?.state || state.mood || '—';
     document.getElementById('nowTime').textContent = slot ? `${slot.from}〜${slot.to}` : '';
-    document.getElementById('morningPost').textContent = state.morning_post || '—';
+    document.getElementById('morningPost').textContent = slot?.state || state.mood || '—';
     renderOwl(owlKey);
 
     // スロット
