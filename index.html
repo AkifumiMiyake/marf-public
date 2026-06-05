@@ -290,30 +290,32 @@ function renderPosts(posts) {
 }
 
 async function update() {
-  try {
-    const [state, posts] = await Promise.all([loadState(), loadPosts()]);
+  // state と posts を独立して取得（片方が失敗しても表示できる）
+  const [stateResult, postsResult] = await Promise.allSettled([loadState(), loadPosts()]);
 
-    // 今の状態
+  if (stateResult.status === 'fulfilled') {
+    const state = stateResult.value;
     const slot = currentSlot(state.time_slots);
     const owlKey = slot?.owl || owlFromMood(state.mood);
     document.getElementById('nowState').textContent = slot?.state || state.mood || '—';
     document.getElementById('nowTime').textContent = slot ? `${slot.from}〜${slot.to}` : '';
     document.getElementById('morningPost').textContent = slot?.state || state.mood || '—';
     renderOwl(owlKey);
-
-    // スロット
     renderSlots(state.time_slots, slot);
-
-    // 投稿
-    renderPosts(posts);
-
-    // 更新時刻
-    document.getElementById('lastUpdated').textContent =
-      new Date().toLocaleString('ja-JP',{timeZone:'Asia/Tokyo',hour:'2-digit',minute:'2-digit'});
-  } catch(e) {
-    document.getElementById('nowState').textContent = 'データ取得エラー';
-    console.error(e);
+  } else {
+    document.getElementById('nowState').textContent = '取得中...';
+    console.error('state取得失敗:', stateResult.reason);
   }
+
+  if (postsResult.status === 'fulfilled') {
+    renderPosts(postsResult.value);
+  } else {
+    document.getElementById('postsList').innerHTML = '<div class="loading">投稿の取得に失敗しました</div>';
+    console.error('posts取得失敗:', postsResult.reason);
+  }
+
+  document.getElementById('lastUpdated').textContent =
+    new Date().toLocaleString('ja-JP',{timeZone:'Asia/Tokyo',hour:'2-digit',minute:'2-digit'});
 }
 
 update();
