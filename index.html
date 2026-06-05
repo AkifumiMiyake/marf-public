@@ -13,12 +13,12 @@
   --green:  #00ff88;
   --bg:     #050508;
   --bg2:    #0a0a12;
-  --panel:  rgba(0,255,240,0.04);
+  --panel:  rgba(0,255,240,0.07);
   --border: rgba(0,255,240,0.18);
   --glow-c: rgba(0,255,240,0.35);
   --glow-p: rgba(191,0,255,0.35);
-  --text:   #e8f4f4;
-  --dim:    rgba(232,244,244,0.45);
+  --text:   #f0fafa;
+  --dim:    #b8d8d8;
   --mono:   'Space Mono', monospace;
   --sans:   'Noto Sans JP', sans-serif;
 }
@@ -47,8 +47,8 @@ body::before {
       0deg,
       transparent,
       transparent 2px,
-      rgba(0,255,240,0.018) 2px,
-      rgba(0,255,240,0.018) 4px
+      rgba(0,255,240,0.008) 2px,
+      rgba(0,255,240,0.008) 4px
     );
   pointer-events: none;
 }
@@ -57,7 +57,7 @@ body::before {
 body::after {
   content: '';
   position: fixed; inset: 0; z-index: 0;
-  background-image: radial-gradient(rgba(0,255,240,0.08) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(0,255,240,0.04) 1px, transparent 1px);
   background-size: 28px 28px;
   pointer-events: none;
   animation: gridPulse 8s ease-in-out infinite;
