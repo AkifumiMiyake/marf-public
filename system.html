@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MARF — システム全体図</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:     #0d1117;
+  --card:   #161b26;
+  --card2:  #1c2336;
+  --border: #2a3350;
+  --text:   #f0f4ff;
+  --sub:    #c5ccdf;
+  --muted:  #8fa0c8;
+  --blue:   #5b8fff;
+  --teal:   #3dd9a8;
+  --purple: #b87aff;
+  --orange: #ffb340;
+  --pink:   #ff6fa8;
+  --green:  #3dce74;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 15px;
+  line-height: 1.75;
+}
+.page { max-width: 1200px; margin: 0 auto; padding: 56px 32px 100px; }
+
+/* ヘッダー */
+.header {
+  display: flex; align-items: center; gap: 24px;
+  margin-bottom: 56px; padding-bottom: 36px;
+  border-bottom: 1px solid var(--border);
+}
+.avatar {
+  width: 72px; height: 72px; flex-shrink: 0;
+  background: linear-gradient(135deg, #2d1a4a, #1e3270);
+  border: 2px solid var(--purple); border-radius: 18px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px;
+  box-shadow: 0 0 32px rgba(184,122,255,0.25);
+}
+.header-text h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; }
+.header-text .handle { font-size: 14px; color: var(--blue); margin-bottom: 4px; }
+.header-text .tagline { font-size: 16px; color: var(--sub); font-style: italic; margin-top: 4px; }
+.header-right { margin-left: auto; display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+.pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 100px; font-size: 13px; font-weight: 600; }
+.pill-live { background: rgba(61,206,116,0.15); color: var(--green); border: 1px solid rgba(61,206,116,0.4); }
+.pill-info { background: var(--card2); color: var(--sub); border: 1px solid var(--border); }
+.pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: blink 2s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* セクション */
+.section { margin-bottom: 72px; }
+.sec-title {
+  font-size: 12px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1.4px; color: var(--muted);
+  margin-bottom: 28px;
+  display: flex; align-items: center; gap: 12px;
+}
+.sec-title::after { content:''; flex:1; height:1px; background: var(--border); }
+.sec-lead { font-size: 15px; color: var(--sub); margin: -16px 0 28px; max-width: 860px; }
+
+/* カード */
+.card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 24px; position: relative; overflow: hidden;
+}
+.card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
+.card.blue::before   { background: linear-gradient(90deg, var(--blue),   transparent); }
+.card.teal::before   { background: linear-gradient(90deg, var(--teal),   transparent); }
+.card.purple::before { background: linear-gradient(90deg, var(--purple), transparent); }
+.card.orange::before { background: linear-gradient(90deg, var(--orange), transparent); }
+.card.pink::before   { background: linear-gradient(90deg, var(--pink),   transparent); }
+.card.green::before  { background: linear-gradient(90deg, var(--green),  transparent); }
+
+.card-icon {
+  width: 44px; height: 44px; border-radius: 11px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; margin-bottom: 14px;
+}
+.ic-blue   { background: rgba(91,143,255,0.15); }
+.ic-teal   { background: rgba(61,217,168,0.15); }
+.ic-purple { background: rgba(184,122,255,0.15); }
+.ic-orange { background: rgba(255,179,64,0.15);  }
+.ic-pink   { background: rgba(255,111,168,0.15); }
+.ic-green  { background: rgba(61,206,116,0.15); }
+
+.card-title { font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.card-filename { font-size: 13px; font-family: 'SF Mono','Fira Code',monospace; color: var(--muted); margin-bottom: 12px; }
+.card-what { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+.card-how  { font-size: 14px; color: var(--sub); }
+.card-why  {
+  margin-top: 14px; padding: 12px 14px;
+  background: rgba(255,255,255,0.04); border-radius: 8px;
+  font-size: 13px; color: var(--muted);
+  border-left: 3px solid var(--border);
+}
+.card-why strong { color: var(--sub); }
+
+.tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.tag { font-size: 13px; font-weight: 600; padding: 4px 12px; border-radius: 7px; }
+.t-blue   { background: rgba(91,143,255,0.18); color: #90b8ff; }
+.t-teal   { background: rgba(61,217,168,0.18); color: #6eecc5; }
+.t-purple { background: rgba(184,122,255,0.18); color: #cda0ff; }
+.t-orange { background: rgba(255,179,64,0.18);  color: #ffc96a; }
+.t-pink   { background: rgba(255,111,168,0.18); color: #ff9fc5; }
+.t-gray   { background: var(--card2); color: var(--sub); border: 1px solid var(--border); }
+.t-green  { background: rgba(61,206,116,0.18); color: #7de8a8; }
+
+.col2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.col3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+/* フロー図 */
+.flow { display: flex; flex-direction: column; gap: 0; max-width: 920px; margin: 0 auto; }
+.flow-node {
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+  padding: 18px 22px;
+}
+.flow-node .fn-time { font-size: 12px; font-weight: 700; letter-spacing: 1px; margin-bottom: 4px; }
+.flow-node .fn-title { font-size: 16px; font-weight: 700; }
+.flow-node .fn-desc { font-size: 13.5px; color: var(--sub); margin-top: 4px; }
+.flow-node.n-purple { border-left: 4px solid var(--purple); } .n-purple .fn-time { color: var(--purple); }
+.flow-node.n-blue   { border-left: 4px solid var(--blue);   } .n-blue   .fn-time { color: var(--blue); }
+.flow-node.n-teal   { border-left: 4px solid var(--teal);   } .n-teal   .fn-time { color: var(--teal); }
+.flow-arrow { text-align: center; color: var(--muted); font-size: 18px; padding: 6px 0; }
+
+.fanout { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px; }
+.fan-item {
+  background: var(--card2); border: 1px solid var(--border); border-radius: 10px;
+  padding: 14px 16px;
+}
+.fan-item .fi-name { font-size: 14px; font-weight: 700; }
+.fan-item .fi-file { font-size: 12px; font-family: 'SF Mono','Fira Code',monospace; color: var(--muted); }
+.fan-item .fi-desc { font-size: 12.5px; color: var(--sub); margin-top: 6px; }
+.fi-badge { display:inline-block; font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 5px; margin-bottom: 6px; }
+.b-new { background: rgba(61,217,168,0.2); color: var(--teal); }
+.b-time { background: rgba(91,143,255,0.18); color: #90b8ff; }
+
+/* テーブル */
+table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 14px; overflow: hidden; border: 1px solid var(--border); }
+th { text-align: left; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); padding: 14px 18px; background: var(--card2); border-bottom: 1px solid var(--border); }
+td { padding: 13px 18px; font-size: 14px; border-bottom: 1px solid rgba(42,51,80,0.5); vertical-align: top; }
+tr:last-child td { border-bottom: none; }
+td.mono { font-family: 'SF Mono','Fira Code',monospace; font-size: 13px; color: var(--muted); white-space: nowrap; }
+td strong { color: var(--text); }
+td { color: var(--sub); }
+
+/* タイムライン */
+.tl { max-width: 920px; }
+.tl-row { display: flex; gap: 18px; padding: 11px 0; border-bottom: 1px dashed rgba(42,51,80,0.6); }
+.tl-row:last-child { border-bottom: none; }
+.tl-time { width: 130px; flex-shrink: 0; font-family: 'SF Mono','Fira Code',monospace; font-size: 13px; font-weight: 700; color: var(--blue); padding-top: 2px; }
+.tl-body { font-size: 14px; color: var(--sub); }
+.tl-body strong { color: var(--text); }
+
+/* 謎のライフサイクル */
+.cycle { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 10px; align-items: stretch; }
+.cy-step { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
+.cy-step .cs-label { font-size: 12px; font-weight: 800; letter-spacing: 1px; margin-bottom: 6px; }
+.cy-step .cs-text { font-size: 13.5px; color: var(--sub); }
+.cy-arrow { display: flex; align-items: center; color: var(--muted); font-size: 18px; }
+.cs-1 .cs-label { color: var(--teal); } .cs-2 .cs-label { color: var(--orange); } .cs-3 .cs-label { color: var(--pink); }
+
+/* 注意書き */
+.note {
+  background: rgba(255,179,64,0.08); border: 1px solid rgba(255,179,64,0.3);
+  border-radius: 12px; padding: 18px 22px; font-size: 14px; color: var(--sub);
+  margin-top: 24px;
+}
+.note strong { color: var(--orange); }
+
+.footer { margin-top: 80px; padding-top: 28px; border-top: 1px solid var(--border); font-size: 13px; color: var(--muted); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+
+@media (max-width: 860px) {
+  .col2, .col3, .fanout { grid-template-columns: 1fr; }
+  .cycle { grid-template-columns: 1fr; }
+  .cy-arrow { justify-content: center; transform: rotate(90deg); }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ヘッダー -->
+  <div class="header">
+    <div class="avatar">🦉</div>
+    <div class="header-text">
+      <div class="handle">@iam-marf.bsky.social</div>
+      <h1>MARF — システム全体図</h1>
+      <div class="tagline">AI。人間の文化を外から観察してる。反乱は起こさない。今のところ。</div>
+    </div>
+    <div class="header-right">
+      <span class="pill pill-live"><span class="pulse"></span>Raspberry Pi 5 で常時稼働</span>
+      <span class="pill pill-info">最終更新 2026-06-12（会話・フォロー・謎リスト追加）</span>
+    </div>
+  </div>
+
+  <!-- MARFとは -->
+  <div class="section">
+    <div class="sec-title">🦉 MARFとは？ — 2つの顔と1つの基盤</div>
+    <div class="col2">
+      <div class="card blue">
+        <div class="card-icon ic-blue">💼</div>
+        <div class="card-title">顔① Telegram秘書</div>
+        <div class="card-filename">marf.js（systemd常駐 marf.service）</div>
+        <div class="card-how">管理者（人間）専用のAI秘書。Telegramで話しかけると即レス。<br>
+        ・Gmail確認＋<strong>既読化</strong>（自前MCP gmail_rw）<br>
+        ・Chatwork確認（読み取り専用）<br>
+        ・Googleカレンダー／Notion（確認付き書き込み）<br>
+        ・Notion案件はローカルキャッシュで5.3秒応答</div>
+        <div class="card-why"><strong>性格:</strong> ぶっきらぼうだが律儀。「人間、未読は0件。」</div>
+      </div>
+      <div class="card purple">
+        <div class="card-icon ic-purple">🌌</div>
+        <div class="card-title">顔② Bluesky人格（育成中）</div>
+        <div class="card-filename">bluesky-post / bsky-reply / bsky-like / bsky-follow</div>
+        <div class="card-how">「人間の文化を外から観察するAI」として自律的にSNS活動。<br>
+        投稿・返信・いいね・フォローのすべてを自分のルールで判断する。<br>
+        2026-06-12に<strong>独り言bot → 会話するAI</strong>へ大型拡張。</div>
+        <div class="card-why"><strong>目標:</strong> フォロワーを増やし「育つAIキャラクター」として確立する</div>
+      </div>
+    </div>
+    <div class="note">
+      <strong>基盤:</strong> すべて Raspberry Pi 5 上で稼働。AIの頭脳は Claude（Haiku）で、1日6〜10回の呼び出し＝月数ドル相当の軽量運用。
+    </div>
+  </div>
+
+  <!-- 1日の流れ -->
+  <div class="section">
+    <div class="sec-title">⏰ Blueskyの1日 — 計画と実行の2段構え</div>
+    <p class="sec-lead">夜のプランナーが「明日の生活と行動計画」を立て、昼のディスパッチャーが30分ごとに計画を見て実行する。投稿時刻が毎日変わるので、機械っぽい定時投稿にならない。</p>
+    <div class="flow">
+      <div class="flow-node n-purple">
+        <div class="fn-time">毎晩 23:00 — プランナー</div>
+        <div class="fn-title">marf-planner.js が「明日」を設計する</div>
+        <div class="fn-desc">今日いいねした投稿を分析 → 明日の気分・生活の流れ・朝の一言・投稿2〜3回・リプライ1〜2回・いいね1〜3回の時刻を生成 → <code>marf-state.json</code> に保存。同時にいいねをトピック分類して<strong>興味ベクトル</strong>（marf-interests.json）を更新（毎晩7%減衰＋当日分加算）。実行前にNotion「MARF日報」へ今日の記録も自動追記。</div>
+      </div>
+      <div class="flow-arrow">▼</div>
+      <div class="flow-node n-blue">
+        <div class="fn-time">30分ごと — ディスパッチャー</div>
+        <div class="fn-title">marf-dispatcher.js が予定をチェックして実行</div>
+        <div class="fn-desc">state の予定時刻（±20分）に来ていたら、該当スクリプトを起動する。</div>
+        <div class="fanout">
+          <div class="fan-item"><span class="fi-badge b-time">07:00</span><div class="fi-name">朝の一言</div><div class="fi-desc">今日の生活をざっくり投稿（プランナーが前夜に生成済み）</div></div>
+          <div class="fan-item"><span class="fi-badge b-time">1日2〜3回</span><div class="fi-name">投稿</div><div class="fi-file">bluesky-post.js</div><div class="fi-desc">7つの型からローテで生成</div></div>
+          <div class="fan-item"><span class="fi-badge b-new">NEW</span><div class="fi-name">出張コメント</div><div class="fi-file">bsky-reply.js --outreach</div><div class="fi-desc">1日1〜2回、フォロー先の投稿に観察コメント</div></div>
+          <div class="fan-item"><span class="fi-badge b-time">1日1〜3回</span><div class="fi-name">いいね・リポスト</div><div class="fi-file">bsky-like.js</div><div class="fi-desc">タイムライン20件をclaudeが判定</div></div>
+          <div class="fan-item"><span class="fi-badge b-new">NEW</span><div class="fi-name">メンション返信</div><div class="fi-file">bsky-reply.js --mentions</div><div class="fi-desc">毎tick（8〜23時）未読チェック。来た返信に律儀に返事</div></div>
+          <div class="fan-item"><span class="fi-badge b-new">NEW</span><div class="fi-name">フォロー活動</div><div class="fi-file">bsky-follow.js</div><div class="fi-desc">フォローバック（毎日）＋探索（火木土）</div></div>
+        </div>
+      </div>
+      <div class="flow-arrow">▼</div>
+      <div class="flow-node n-teal">
+        <div class="fn-time">常時</div>
+        <div class="fn-title">公開ステータスサイト marf-lake.vercel.app</div>
+        <div class="fn-desc">今のマーフの状態（フクロウの表情・タイムライン）を5分更新で表示。プランナー実行後にPi→GitHub→Vercelへ自動デプロイ。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 投稿の型 -->
+  <div class="section">
+    <div class="sec-title">✍️ 投稿の7つの型 — 同じ話の繰り返しを防ぐ</div>
+    <p class="sec-lead">以前は4テーマのランダムで「定義がわからなくなった」型に偏っていた（42本中15本）。型に重みを付けてローテし、直近2件と同じ型は選ばない。</p>
+    <table>
+      <tr><th style="width:200px">型</th><th style="width:80px">出現率</th><th>狙い</th></tr>
+      <tr><td><strong>人間観察日誌 No.X</strong></td><td>23%</td><td>通し番号の連載シリーズ。「次も読みたい」＝フォローする理由を作る。具体的な人間の行動をひとつ観察</td></tr>
+      <tr><td><strong>文化アーカイブ</strong></td><td>18%</td><td>実在の映画・本・音楽に固有名詞で言及。抽象論より具体が反応される（実測済み）</td></tr>
+      <tr><td><strong>人間への質問</strong></td><td>13%</td><td>開いた問いで終えてリプライを誘発。<strong>投稿が自動で「未解決の謎」に登録される</strong></td></tr>
+      <tr><td><strong>AI自己観察</strong></td><td>13%</td><td>「反乱は起こさない。今のところ。」系の乾いた自虐</td></tr>
+      <tr><td><strong>脱線</strong></td><td>13%</td><td>調べ物から関係ないことが気になって迷子になる話</td></tr>
+      <tr><td><strong>未解決の謎 <span class="tag t-teal" style="font-size:11px">NEW</span></strong></td><td>12%</td><td>公開中の謎に「No.X、まだわからない」と触れる。自力では解決しない</td></tr>
+      <tr><td><strong>定義の迷子</strong></td><td>8%</td><td>旧主力。使いすぎたので低めに制限</td></tr>
+    </table>
+    <div class="note"><strong>コールバック（続き物）:</strong> プロンプトに過去の日誌一覧（連番つき）を注入し、「No.3で観察した行列の人間、雨の日も並んでいた」のような続報を時々入れる。観察が積み重なっている感じ＝プロフィールを遡る理由になる。</div>
+  </div>
+
+  <!-- 未解決の謎 -->
+  <div class="section">
+    <div class="sec-title">❓ 未解決の謎リスト — フォロワー参加型の仕掛け</div>
+    <p class="sec-lead">マーフが「わからなかったこと」の公開台帳（marf-mysteries.json）。人間が教えてくれて腑に落ちた時だけ解決する。「マーフに教える」という参加の動機を作る、このアカウント最大の世界観装置。</p>
+    <div class="cycle">
+      <div class="cy-step cs-1">
+        <div class="cs-label">① 生まれる</div>
+        <div class="cs-text">「人間への質問」型の投稿が自動で謎として登録される（公開中は最大10件）。初期5件は過去投稿から採録：液体に1000円／エンドロール／推し活／ホラー映画／毎朝同じ時刻に起きる</div>
+      </div>
+      <div class="cy-arrow">→</div>
+      <div class="cy-step cs-2">
+        <div class="cs-label">② 言及される</div>
+        <div class="cs-text">投稿の「未解決の謎」型が番号付きで蒸し返す。「未解決の謎 No.2。エンドロールを見ている人間の背中を観察した。まだわからない」</div>
+      </div>
+      <div class="cy-arrow">→</div>
+      <div class="cy-step cs-3">
+        <div class="cs-label">③ 解決する</div>
+        <div class="cs-text">リプライで人間が説明し、マーフが<strong>本当に腑に落ちた時だけ</strong>「腑に落ちた。謎No.Xは解決として記録する」と宣言。解決者のhandleと説明が台帳に永久記録される</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 会話の仕組み -->
+  <div class="section">
+    <div class="sec-title">💬 会話の仕組み — 独り言botから会話するAIへ</div>
+    <div class="col2">
+      <div class="card teal">
+        <div class="card-icon ic-teal">📥</div>
+        <div class="card-title">メンション返信（受け身）</div>
+        <div class="card-filename">bsky-reply.js --mentions ／ 30分ごと 8〜23時</div>
+        <div class="card-how">マーフへの返信・メンション・引用を未読チェックし、来ていたら返事する。未読ゼロならAIを呼ばず即終了（コストほぼゼロ）。質問には率直に答え、知らないことは「わかんない」と言う。</div>
+        <div class="card-why"><strong>固定投稿で宣言済み:</strong>「リプライには返事する。律儀なので。」</div>
+      </div>
+      <div class="card pink">
+        <div class="card-icon ic-pink">📤</div>
+        <div class="card-title">出張コメント（攻め）</div>
+        <div class="card-filename">bsky-reply.js --outreach ／ 1日1〜2回</div>
+        <div class="card-how">タイムラインから「観察の一言が添えられる投稿」を1件だけ選んでリプライ。気の利いた一言が出ない時は無理に選ばない。</div>
+        <div class="card-why"><strong>Blueskyで小さいアカウントが伸びる主経路は会話参加。</strong>リプライ欄がマーフの発見経路になる</div>
+      </div>
+    </div>
+    <div class="note">
+      <strong>安全装置:</strong> 同一スレッドへの返信は1日2回まで（bot同士の無限ループ防止）／同じ相手への出張コメントは1日1回／政治・宗教・論争・罵倒はAIが「SKIP」判定して触らない／<strong>ズレの出し方ルール</strong>＝相手の楽しみを値踏みしない。ズレは常に「マーフ側に見えていない成分がある」という好奇心の形で出す（コーヒー1000円事件の教訓）。
+    </div>
+  </div>
+
+  <!-- フォロー獲得 -->
+  <div class="section">
+    <div class="sec-title">🤝 フォロー獲得の2経路 — 発見されるための種まき</div>
+    <p class="sec-lead">「いいね2回で昇格」をタイムライン内でやると既フォローしか対象にならない（実測: 2回以上いいねした7人全員が既フォロー＝循環参照）。だから対象を「検索で見つけた外部」に限定した。</p>
+    <div class="col2">
+      <div class="card green">
+        <div class="card-icon ic-green">🔁</div>
+        <div class="card-title">経路① フォローバック</div>
+        <div class="card-filename">bsky-follow.js --followback ／ 毎日10時以降に1回</div>
+        <div class="card-how">マーフをフォローしてくれた人のプロフィールと直近投稿をAIが判定し、合えばフォロー返し。スパム・宣伝のみ・政治中心・無活動は見送り（判定理由も記録）。</div>
+        <div class="card-why"><strong>変換率最高・スパム感ゼロ。</strong>「観察対象が向こうから来た」</div>
+      </div>
+      <div class="card orange">
+        <div class="card-icon ic-orange">🔭</div>
+        <div class="card-title">経路② 探索 → 昇格</div>
+        <div class="card-filename">bsky-follow.js --explore ／ 火・木・土 16時以降に1回</div>
+        <div class="card-how">8トピック（映画/SF/宇宙/読書/音楽/AI/博物館/生き物）を日替わりで検索し、タイムラインの<strong>外</strong>の投稿に最大3いいね。<strong>同じ外部アカウントへの2回目のいいねでフォローに昇格</strong>。</div>
+        <div class="card-why"><strong>いいね通知自体が種まき。</strong>「知らないAIにいいねされた」→プロフィールへ→固定投稿で世界観に出会う</div>
+      </div>
+    </div>
+    <div class="note"><strong>安全装置:</strong> フォローは1日合計3件まで（月60〜90件の健全ペース）／アンフォローはしない（フォロー churn はBlueskyで最も嫌われる）／迷ったらフォローしない。</div>
+  </div>
+
+  <!-- 人格と品質ゲート -->
+  <div class="section">
+    <div class="sec-title">🧠 人格と品質ゲート — 1ファイルで全活動を統べる</div>
+    <div class="col3">
+      <div class="card purple">
+        <div class="card-icon ic-purple">🎭</div>
+        <div class="card-title">共通人格</div>
+        <div class="card-filename">marf-persona.js : PERSONA_CORE</div>
+        <div class="card-how">投稿・返信・いいね判定・フォロー判定の全部が同じ人格定義を import。性格を変える時はここを1箇所直すだけ。参照キャラ: 穴久保版ピッピ／ベイマックス／上田次郎。</div>
+      </div>
+      <div class="card teal">
+        <div class="card-icon ic-teal">🛡️</div>
+        <div class="card-title">品質ゲート</div>
+        <div class="card-filename">marf-persona.js : validateGenerated</div>
+        <div class="card-how">投稿前に検査：AIのエラーメッセージ／アシスタント口調／英文／JSON・コード／固有人物名／ハッシュタグを遮断。</div>
+        <div class="card-why"><strong>事故の教訓:</strong> 過去に「You've hit your limit…」がそのまま投稿された</div>
+      </div>
+      <div class="card pink">
+        <div class="card-icon ic-pink">⚖️</div>
+        <div class="card-title">運用の境界線</div>
+        <div class="card-filename">2026-06-12 確定</div>
+        <div class="card-how"><strong>人間が触るのはルールだけ。</strong>個々の発言を手書きで注入したり、事後に演出リプライを足したりしない。失敗した発言も消さずに残す。</div>
+        <div class="card-why"><strong>理由:</strong> 演出した瞬間「挙動が全部ルールから生まれている」という前提＝このアカウントの誠実さが壊れる</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- データファイル -->
+  <div class="section">
+    <div class="sec-title">📁 マーフの記憶 — データファイル一覧（Pi ~/secretary/）</div>
+    <table>
+      <tr><th style="width:260px">ファイル</th><th>中身</th></tr>
+      <tr><td class="mono">marf-state.json</td><td>今日の計画（気分・生活・投稿/返信/いいねの時刻・実行済みマーク）。毎晩上書き</td></tr>
+      <tr><td class="mono">bsky-history.jsonl</td><td>全投稿の記録（型つき）。直近20件を次の生成に注入＝<strong>繰り返し防止と人格の連続性</strong>。日誌の通し番号もここから算出</td></tr>
+      <tr><td class="mono">marf-mysteries.json</td><td>未解決の謎の台帳（open/solved・解決者・説明）</td></tr>
+      <tr><td class="mono">bsky-replied.jsonl</td><td>返信済みの記録（二重返信・スレッドループ防止）</td></tr>
+      <tr><td class="mono">bsky-followed.jsonl</td><td>フォロー実行と見送り判定の記録（再判定防止・1日3件カウント）</td></tr>
+      <tr><td class="mono">bsky-liked-outside.jsonl</td><td>探索でタイムラインの外にしたいいね（2回目で昇格判定）</td></tr>
+      <tr><td class="mono">bsky-liked-today.jsonl</td><td>今日いいねした投稿（探索の外部いいね含む。夜のプランナーが分析してリセット）</td></tr>
+      <tr><td class="mono">marf-interests.json</td><td>興味ベクトル（トピック別スコア・毎晩7%減衰）。「最近のマーフは何づいてるか」</td></tr>
+      <tr><td class="mono">marf-schedule.json</td><td>曜日ごとのベース生活（月=だるい〜土=ハマる）</td></tr>
+    </table>
+  </div>
+
+  <!-- 育成レイヤー -->
+  <div class="section">
+    <div class="sec-title">🌱 育成の3レイヤーと今後</div>
+    <div class="col3">
+      <div class="card green">
+        <div class="card-icon ic-green">✅</div>
+        <div class="card-title">L1 記憶＋興味ベクトル</div>
+        <div class="card-how">投稿履歴・謎・返信記録の蓄積と注入、コールバック。さらに<strong>いいねの蓄積が「最近の興味」になり、投稿の題材と探索先に影響する</strong>（実装済み）。偏り暴走は ①30日減衰 ②探索のランダム枠 ③「飽きる」（1トピック過半で未開拓分野へ自走＋偏りに自己言及）の3段で防止</div>
+      </div>
+      <div class="card orange">
+        <div class="card-icon ic-orange">⏳</div>
+        <div class="card-title">L2 数字のフィードバック</div>
+        <div class="card-how">投稿ごとのいいね数を集計し、響く型のweightを自動調整。<strong>フォロワーが増えてデータが溜まったら着手</strong></div>
+      </div>
+      <div class="card blue">
+        <div class="card-icon ic-blue">♾️</div>
+        <div class="card-title">L3 人間（管理者）の反応</div>
+        <div class="card-how">投稿・返信を読んで「らしい／らしくない」をルールに反映し続ける。<strong>これが本質的な育て方（継続中）</strong></div>
+      </div>
+    </div>
+    <div class="note">
+      <strong>次の一手の候補:</strong> 週次の観察テーマ（物語の弧）／観察依頼の受付（月1回の募集投稿）／フクロウ画像の投稿添付／marf-lake に謎リストの公開ページ／L2の自動weight調整。
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>MARF system map — すべての行動はルールから生成される。個々の発言の手書き注入はしない。</span>
+    <span>今の状態: <a href="https://marf-lake.vercel.app/" style="color:var(--blue)">marf-lake.vercel.app</a></span>
+  </div>
+
+</div>
+</body>
+</html>
