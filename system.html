@@ -240,7 +240,7 @@ td { color: var(--sub); }
       <div class="flow-node n-purple">
         <div class="fn-time">毎晩 23:00 — プランナー</div>
         <div class="fn-title">marf-planner.js が「明日」を設計する</div>
-        <div class="fn-desc">今日いいねした投稿を分析 → 明日の気分・生活の流れ・朝の一言・投稿2〜3回・リプライ1〜2回・いいね1〜3回の時刻を生成 → <code>marf-state.json</code> に保存。同時にいいねをトピック分類して<strong>興味ベクトル</strong>（marf-interests.json）を更新（毎晩7%減衰＋当日分加算）。実行前にNotion「MARF日報」へ今日の記録も自動追記。</div>
+        <div class="fn-desc">今日いいねした投稿を分析 → 明日の気分・生活の流れ・朝の一言・<strong>投稿1〜4回（生活の密度で変動・反応されやすい朝/昼/夜の帯を優先）</strong>・リプライ1〜2回・いいね1〜3回の時刻を生成 → <code>marf-state.json</code> に保存。同時にいいねをトピック分類して<strong>興味ベクトル</strong>を更新（毎晩7%減衰＋当日分加算）し、自分の全投稿の反応数（いいね・リプライ）を「型×時間帯」付きで蓄積（将来の自動チューニング用）。</div>
       </div>
       <div class="flow-arrow">▼</div>
       <div class="flow-node n-blue">
@@ -249,7 +249,7 @@ td { color: var(--sub); }
         <div class="fn-desc">state の予定時刻（±20分）に来ていたら、該当スクリプトを起動する。</div>
         <div class="fanout">
           <div class="fan-item"><span class="fi-badge b-time">07:00</span><div class="fi-name">朝の一言</div><div class="fi-desc">今日の生活をざっくり投稿（プランナーが前夜に生成済み）</div></div>
-          <div class="fan-item"><span class="fi-badge b-time">1日2〜3回</span><div class="fi-name">投稿</div><div class="fi-file">bluesky-post.js</div><div class="fi-desc">7つの型からローテで生成</div></div>
+          <div class="fan-item"><span class="fi-badge b-time">1日1〜4回</span><div class="fi-name">投稿</div><div class="fi-file">bluesky-post.js</div><div class="fi-desc">7つの型からローテで生成。本数は気分で変動（だるい日は1本）</div></div>
           <div class="fan-item"><span class="fi-badge b-new">NEW</span><div class="fi-name">出張コメント</div><div class="fi-file">bsky-reply.js --outreach</div><div class="fi-desc">1日1〜2回、フォロー先の投稿に観察コメント</div></div>
           <div class="fan-item"><span class="fi-badge b-time">1日1〜3回</span><div class="fi-name">いいね・リポスト</div><div class="fi-file">bsky-like.js</div><div class="fi-desc">タイムライン20件をclaudeが判定</div></div>
           <div class="fan-item"><span class="fi-badge b-new">NEW</span><div class="fi-name">メンション返信</div><div class="fi-file">bsky-reply.js --mentions</div><div class="fi-desc">毎tick（8〜23時）未読チェック。来た返信に律儀に返事</div></div>
@@ -299,7 +299,7 @@ td { color: var(--sub); }
       <div class="cy-arrow">→</div>
       <div class="cy-step cs-3">
         <div class="cs-label">③ 解決する</div>
-        <div class="cs-text">リプライで人間が説明し、マーフが<strong>本当に腑に落ちた時だけ</strong>「腑に落ちた。謎No.Xは解決として記録する」と宣言。解決者のhandleと説明が台帳に永久記録される</div>
+        <div class="cs-text">リプライで人間が説明し、マーフが<strong>本当に腑に落ちた時だけ</strong>「腑に落ちた。謎No.Xは解決として記録する」と宣言。解決者のhandleと説明が台帳に永久記録され、<strong>記念投稿がタイムラインに流れる</strong>（解決者の名誉を全員に見せる）</div>
       </div>
     </div>
   </div>
