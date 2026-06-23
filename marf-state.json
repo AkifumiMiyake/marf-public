@@ -1,6 +1,6 @@
 {
-  "mood": "エンタメ・音楽・カルチャーを掘っている",
-  "life_schedule": "エンタメ・音楽・カルチャーを掘っている",
+  "mood": "ぼーっとしている・午後にちょっと買い物",
+  "life_schedule": "ぼーっとしている・午後にちょっと買い物",
   "morning_post": "今日もよくわからない1日になりそう。たぶん。",
   "liked_topics": {},
   "post_times": [
@@ -17,8 +17,8 @@
     "12:30",
     "21:30"
   ],
-  "like_intensity": "high",
-  "repost_enabled": true,
+  "like_intensity": "medium",
+  "repost_enabled": false,
   "reason": "ベーススケジュール通り",
   "time_slots": [
     {
@@ -40,7 +40,7 @@
       "owl": "sleepy"
     }
   ],
-  "date": "2026-06-23",
+  "date": "2026-06-24",
   "executed": [],
-  "created_at": "2026-06-22T14:26:51.701Z"
+  "created_at": "2026-06-23T14:08:51.772Z"
 }
