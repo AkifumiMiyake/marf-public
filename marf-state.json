@@ -1,6 +1,6 @@
 {
-  "mood": "ぼーっとしている・午後にちょっと買い物",
-  "life_schedule": "ぼーっとしている・午後にちょっと買い物",
+  "mood": "映画・Netflix・映像を見ている",
+  "life_schedule": "映画・Netflix・映像を見ている",
   "morning_post": "今日もよくわからない1日になりそう。たぶん。",
   "liked_topics": {},
   "post_times": [
@@ -18,7 +18,7 @@
     "21:30"
   ],
   "like_intensity": "medium",
-  "repost_enabled": false,
+  "repost_enabled": true,
   "reason": "ベーススケジュール通り",
   "time_slots": [
     {
@@ -40,7 +40,7 @@
       "owl": "sleepy"
     }
   ],
-  "date": "2026-06-24",
+  "date": "2026-06-25",
   "executed": [],
-  "created_at": "2026-06-23T14:08:51.772Z"
+  "created_at": "2026-06-24T14:27:51.622Z"
 }
